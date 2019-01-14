@@ -31,6 +31,7 @@ case "$1" in
 
 			# 
 			cp docker-compose.yml .tmp/docker-compose.yml
+			cp docker-compose.exporters.yml .tmp/docker-compose.exporters.yml
 
 			# replace mapping paths
 			sed -i 's/- \.\/alertmanager\//- \.\.\/alertmanager\//g' .tmp/docker-compose.yml
