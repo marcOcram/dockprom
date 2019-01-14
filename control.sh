@@ -38,7 +38,7 @@ case "$1" in
 			sed -i 's/- \.\/caddy\//- \.\.\/caddy\//g' .tmp/docker-compose.yml
 			sed -i 's/- \.\/grafana\//- \.\.\/grafana\//g' .tmp/docker-compose.yml
 
-			docker-compose -f docker-compose.yml up -d
+			docker-compose -f $DOCKER_FILE up -d
 			docker-compose -f ${DOCKER_FOLDER}docker-compose.exporters.yml up -d
 		else
 			docker-compose -f $DOCKER_FILE up -d
