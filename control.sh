@@ -7,10 +7,11 @@ COLLECT_HOST_NETWORK=true
 IP_ADDRESS=192.168.162.60
 
 if [ $COLLECT_HOST_NETWORK ]; then
-	DOCKER_FILE=./.tmp/docker-compose.yml
+	DOCKER_FOLDER=./.tmp/
 else
-	DOCKER_FILE=./docker-compose.yml
+	DOCKER_FOLDER=./
 fi
+DOCKER_FILE=${DOCKER_FOLDER}docker-compose.yml
 
 case "$1" in
 	start)
@@ -36,8 +37,8 @@ case "$1" in
 			sed -i 's/- \.\/caddy\//- \.\.\/caddy\//g' .tmp/docker-compose.yml
 			sed -i 's/- \.\/grafana\//- \.\.\/grafana\//g' .tmp/docker-compose.yml
 
-			docker-compose -f $DOCKER_FILE up -d
-			docker-compose -f docker-compose.exporters.yml up -d
+			docker-compose -f docker-compose.yml up -d
+			docker-compose -f ${DOCKER_FOLDER}docker-compose.exporters.yml up -d
 		else
 			docker-compose -f $DOCKER_FILE up -d
 		fi
