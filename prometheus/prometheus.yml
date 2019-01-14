@@ -23,6 +23,11 @@ scrape_configs:
     static_configs:
       - targets: ['cadvisor:8080']
 
+  - job_name: 'libvirt'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['libvirt:9177']
+
   - job_name: 'prometheus'
     scrape_interval: 10s
     static_configs:
@@ -33,7 +38,6 @@ scrape_configs:
     honor_labels: true
     static_configs:
       - targets: ['pushgateway:9091']
-
 
 alerting:
   alertmanagers:
