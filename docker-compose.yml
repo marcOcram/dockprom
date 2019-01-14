@@ -85,6 +85,19 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
+  libvirt:
+    image: andersla/libvirt_exporter
+    container_name: libvirt
+    restart: unless-stopped
+    volumes:
+      - /var/run/libvirt/libvirt-sock-ro:/var/run/libvirt/libvirt-sock
+    expose:
+      - 9177
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
   grafana:
     image: grafana/grafana:5.4.2
     container_name: grafana
