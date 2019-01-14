@@ -1,4 +1,4 @@
-{
+{"dashboard": {
   "annotations": {
     "list": [
       {
@@ -16,7 +16,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 5,
+  "id": null,
   "links": [],
   "panels": [
     {
@@ -1587,4 +1587,4 @@
   "title": "Virtual Machines",
   "uid": "AytyQNQik",
   "version": 16
-}
+}}
