@@ -17,104 +17,9 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
+  "iteration": 1547554084889,
   "links": [],
   "panels": [
-    {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorPostfix": false,
-      "colorPrefix": false,
-      "colorValue": true,
-      "colors": [
-        "#d44a3a",
-        "rgba(237, 129, 40, 0.89)",
-        "#299c46"
-      ],
-      "datasource": "Prometheus",
-      "decimals": null,
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 24,
-        "x": 0,
-        "y": 0
-      },
-      "id": 19,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "expr": "libvirt_up",
-          "format": "time_series",
-          "hide": false,
-          "instant": false,
-          "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
-      "thresholds": "0,1",
-      "title": "Virtualization Support (libvirtd)",
-      "transparent": false,
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        },
-        {
-          "op": "=",
-          "text": "Virtualization Disabled",
-          "value": "0"
-        },
-        {
-          "op": "=",
-          "text": "Virtualization Enabled",
-          "value": "1"
-        }
-      ],
-      "valueName": "current"
-    },
     {
       "cacheTimeout": null,
       "colorBackground": false,
@@ -140,7 +45,7 @@
         "h": 4,
         "w": 4,
         "x": 0,
-        "y": 3
+        "y": 0
       },
       "hideTimeOverride": true,
       "id": 4,
@@ -181,7 +86,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(libvirt_domain_info_cpu_time_seconds_total{domain!=\"\"}[1m])) / count(node_cpu_seconds_total{mode=\"user\"}) * 100",
+          "expr": "sum(rate(libvirt_domain_info_cpu_time_seconds_total{domain!=\"\", hostname=\"$hostname\"}[1m])) / count(node_cpu_seconds_total{mode=\"user\", hostname=\"$hostname\"}) * 100",
           "format": "time_series",
           "interval": "10s",
           "intervalFactor": 1,
@@ -229,7 +134,7 @@
         "h": 4,
         "w": 4,
         "x": 4,
-        "y": 3
+        "y": 0
       },
       "id": 7,
       "interval": null,
@@ -269,7 +174,8 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "machine_cpu_cores",
+          "expr": "machine_cpu_cores{hostname=\"$hostname\"}",
+          "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -279,7 +185,7 @@
         }
       ],
       "thresholds": "",
-      "title": "CPU Cores",
+      "title": "Host CPU Cores",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -315,7 +221,7 @@
         "h": 4,
         "w": 4,
         "x": 8,
-        "y": 3
+        "y": 0
       },
       "hideTimeOverride": true,
       "id": 5,
@@ -356,18 +262,26 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "(sum(node_memory_MemTotal_bytes) - sum(node_memory_MemFree_bytes+node_memory_Buffers_bytes+node_memory_Cached_bytes) ) / sum(node_memory_MemTotal_bytes) * 100",
+          "expr": "(sum(node_memory_MemTotal_bytes{hostname=\"$hostname\"}) - sum(node_memory_MemFree_bytes{hostname=\"$hostname\"} + node_memory_Buffers_bytes{hostname=\"$hostname\"} + node_memory_Cached_bytes{hostname=\"$hostname\"}) ) / sum(node_memory_MemTotal_bytes{hostname=\"$hostname\"}) * 100",
           "format": "time_series",
+          "hide": true,
           "interval": "10s",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "A",
           "step": 20
+        },
+        {
+          "expr": "sum(libvirt_domain_info_memory_usage_bytes{domain!=\"\", hostname=\"$hostname\"}) / sum(node_memory_MemTotal_bytes{hostname=\"$hostname\"}) * 100",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "",
+          "refId": "B"
         }
       ],
       "thresholds": "65, 90",
       "timeFrom": "10s",
-      "title": "System Memory Load",
+      "title": "VM Memory Load",
       "transparent": false,
       "type": "singlestat",
       "valueFontSize": "80%",
@@ -405,7 +319,7 @@
         "h": 4,
         "w": 4,
         "x": 12,
-        "y": 3
+        "y": 0
       },
       "hideTimeOverride": true,
       "id": 2,
@@ -446,7 +360,8 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(container_memory_usage_bytes{image!=\"\"})",
+          "expr": "sum(libvirt_domain_info_memory_usage_bytes{domain!=\"\", hostname=\"$hostname\"})",
+          "format": "time_series",
           "interval": "10s",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -456,7 +371,7 @@
       ],
       "thresholds": "",
       "timeFrom": "10s",
-      "title": "Used Memory",
+      "title": "VM Memory Usage",
       "transparent": false,
       "type": "singlestat",
       "valueFontSize": "80%",
@@ -494,7 +409,7 @@
         "h": 4,
         "w": 4,
         "x": 16,
-        "y": 3
+        "y": 0
       },
       "hideTimeOverride": true,
       "id": 6,
@@ -535,7 +450,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "(node_filesystem_size_bytes{fstype=\"ext4\"} - node_filesystem_free_bytes{fstype=\"ext4\"}) / node_filesystem_size_bytes{fstype=\"ext4\"}  * 100",
+          "expr": "(node_filesystem_size_bytes{fstype=\"ext4\", hostname=\"$hostname\"} - node_filesystem_free_bytes{fstype=\"ext4\", hostname=\"$hostname\"}) / node_filesystem_size_bytes{fstype=\"ext4\", hostname=\"$hostname\"}  * 100",
           "format": "time_series",
           "interval": "30s",
           "intervalFactor": 1,
@@ -546,7 +461,7 @@
       ],
       "thresholds": "65, 90",
       "timeFrom": "10s",
-      "title": "Storage Load",
+      "title": "Host Storage Load",
       "transparent": false,
       "type": "singlestat",
       "valueFontSize": "80%",
@@ -562,17 +477,17 @@
     {
       "cacheTimeout": null,
       "colorBackground": false,
-      "colorValue": false,
+      "colorPostfix": false,
+      "colorPrefix": false,
+      "colorValue": true,
       "colors": [
-        "rgba(245, 54, 54, 0.9)",
+        "#d44a3a",
         "rgba(237, 129, 40, 0.89)",
-        "rgba(50, 172, 45, 0.97)"
+        "#299c46"
       ],
       "datasource": "Prometheus",
-      "decimals": 2,
-      "editable": true,
-      "error": false,
-      "format": "bytes",
+      "decimals": null,
+      "format": "none",
       "gauge": {
         "maxValue": 100,
         "minValue": 0,
@@ -584,12 +499,10 @@
         "h": 4,
         "w": 4,
         "x": 20,
-        "y": 3
+        "y": 0
       },
-      "hideTimeOverride": true,
-      "id": 3,
+      "id": 19,
       "interval": null,
-      "isNew": true,
       "links": [],
       "mappingType": 1,
       "mappingTypes": [
@@ -625,16 +538,16 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(container_fs_usage_bytes)",
-          "interval": "30s",
-          "intervalFactor": 2,
-          "refId": "A",
-          "step": 60
+          "expr": "libvirt_up{hostname=\"$hostname\"}",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "intervalFactor": 1,
+          "refId": "A"
         }
       ],
-      "thresholds": "",
-      "timeFrom": "10s",
-      "title": "Used Storage",
+      "thresholds": "0,1",
+      "title": "libvirtd Support",
       "transparent": false,
       "type": "singlestat",
       "valueFontSize": "80%",
@@ -643,9 +556,19 @@
           "op": "=",
           "text": "N/A",
           "value": "null"
+        },
+        {
+          "op": "=",
+          "text": "Disabled",
+          "value": "0"
+        },
+        {
+          "op": "=",
+          "text": "Enabled",
+          "value": "1"
         }
       ],
-      "valueName": "avg"
+      "valueName": "current"
     },
     {
       "aliasColors": {},
@@ -662,7 +585,7 @@
         "h": 4,
         "w": 8,
         "x": 0,
-        "y": 7
+        "y": 4
       },
       "id": 9,
       "isNew": true,
@@ -689,7 +612,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "scalar(count(libvirt_domain_info_virtual_cpus{domain!=\"\"}) > 0)",
+          "expr": "scalar(count(libvirt_domain_info_virtual_cpus{domain!=\"\", hostname=\"$hostname\"}) > 0)",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -703,7 +626,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Running Virtual Machines",
+      "title": "Running VMs",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -756,7 +679,7 @@
         "h": 4,
         "w": 8,
         "x": 8,
-        "y": 7
+        "y": 4
       },
       "id": 10,
       "isNew": true,
@@ -788,7 +711,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "node_load1",
+          "expr": "node_load1{hostname=\"$hostname\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -802,7 +725,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "System Load",
+      "title": "Host Load",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -854,7 +777,7 @@
         "h": 4,
         "w": 8,
         "x": 16,
-        "y": 7
+        "y": 4
       },
       "id": 15,
       "isNew": true,
@@ -896,7 +819,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(node_disk_read_bytes_total[5m]))",
+          "expr": "sum(irate(node_disk_read_bytes_total{hostname=\"$hostname\"}[5m]))",
           "format": "time_series",
           "interval": "2s",
           "intervalFactor": 4,
@@ -906,7 +829,7 @@
           "step": 8
         },
         {
-          "expr": "sum(irate(node_disk_written_bytes_total[5m]))",
+          "expr": "sum(irate(node_disk_written_bytes_total{hostname=\"$hostname\"}[5m]))",
           "format": "time_series",
           "interval": "2s",
           "intervalFactor": 4,
@@ -916,7 +839,7 @@
           "step": 8
         },
         {
-          "expr": "sum(irate(node_disk_io_time_seconds_total[5m]))",
+          "expr": "sum(irate(node_disk_io_time_seconds_total{hostname=\"$hostname\"}[5m]))",
           "format": "time_series",
           "interval": "2s",
           "intervalFactor": 4,
@@ -930,7 +853,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "I/O Usage",
+      "title": "Host I/O Usage",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -983,7 +906,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 11
+        "y": 8
       },
       "id": 8,
       "isNew": true,
@@ -1012,7 +935,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (domain) (rate(libvirt_domain_info_cpu_time_seconds_total{domain!=\"\"}[1m])) / scalar(count(node_cpu_seconds_total{mode=\"user\"})) * 100",
+          "expr": "sum by (domain) (rate(libvirt_domain_info_cpu_time_seconds_total{domain!=\"\", hostname=\"$hostname\"}[1m])) / scalar(count(node_cpu_seconds_total{mode=\"user\", hostname=\"$hostname\"})) * 100",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 10,
@@ -1079,7 +1002,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 15
       },
       "id": 11,
       "isNew": true,
@@ -1108,7 +1031,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (domain)(libvirt_domain_info_memory_usage_bytes{domain!=\"\"})",
+          "expr": "sum by (domain)(libvirt_domain_info_memory_usage_bytes{domain!=\"\", hostname=\"$hostname\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1175,7 +1098,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 25
+        "y": 22
       },
       "id": 13,
       "isNew": true,
@@ -1204,7 +1127,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (domain,source_bridge) (rate(libvirt_domain_interface_stats_receive_bytes_total{domain!=\"\"}[1m]))",
+          "expr": "sum by (domain,source_bridge) (rate(libvirt_domain_interface_stats_receive_bytes_total{domain!=\"\", hostname=\"$hostname\"}[1m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 10,
@@ -1218,7 +1141,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Virtual Machines Network Input",
+      "title": "VM Network Input",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -1271,7 +1194,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 32
+        "y": 29
       },
       "id": 14,
       "isNew": true,
@@ -1300,7 +1223,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (domain,source_bridge) (rate(libvirt_domain_interface_stats_transmit_bytes_total{domain!=\"\"}[1m]))",
+          "expr": "sum by (domain,source_bridge) (rate(libvirt_domain_interface_stats_transmit_bytes_total{domain!=\"\", hostname=\"$hostname\"}[1m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 10,
@@ -1314,7 +1237,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Virtual Machines Network Output",
+      "title": "VM Network Output",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -1367,7 +1290,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 39
+        "y": 36
       },
       "id": 16,
       "isNew": true,
@@ -1396,7 +1319,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (domain,target_device) (rate(libvirt_domain_block_stats_read_bytes_total{domain!=\"\"}[1m]))",
+          "expr": "sum by (domain,target_device) (rate(libvirt_domain_block_stats_read_bytes_total{domain!=\"\", hostname=\"$hostname\"}[1m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 10,
@@ -1410,7 +1333,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Virtual Machines I/O Read",
+      "title": "VM I/O Read",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -1463,7 +1386,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 46
+        "y": 43
       },
       "id": 17,
       "isNew": true,
@@ -1492,7 +1415,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (domain,target_device) (rate(libvirt_domain_block_stats_write_bytes_total{domain!=\"\"}[1m]))",
+          "expr": "sum by (domain,target_device) (rate(libvirt_domain_block_stats_write_bytes_total{domain!=\"\", hostname=\"$hostname\"}[1m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 10,
@@ -1506,7 +1429,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Virtual Machines I/O Write",
+      "title": "VM I/O Write",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -1552,7 +1475,45 @@
     "docker"
   ],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "tags": [],
+          "text": "compute1",
+          "value": "compute1"
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(hostname)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Host",
+        "multi": false,
+        "name": "hostname",
+        "options": [
+          {
+            "selected": true,
+            "text": "compute1",
+            "value": "compute1"
+          },
+          {
+            "selected": false,
+            "text": "controller",
+            "value": "controller"
+          }
+        ],
+        "query": "label_values(hostname)",
+        "refresh": 0,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
   },
   "time": {
     "from": "now-15m",
@@ -1586,5 +1547,5 @@
   "timezone": "browser",
   "title": "Virtual Machines",
   "uid": "AytyQNQik",
-  "version": 16
+  "version": 4
 }}
