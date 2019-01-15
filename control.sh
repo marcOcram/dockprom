@@ -6,7 +6,7 @@ ADMIN_PASSWORD=admin
 
 # change this to true if you want to collect network metrics from the host.
 # beware that the containers nodeexporter and cadvisor will be on the same network as the host.
-# shutdown before changing from true to false or vice versa (./control.sh down)
+# shutdown containers before changing from true to false or vice versa (./control.sh down)
 COLLECT_HOST_NETWORK=true
 
 # the ip address of the HOST to use to connect to nodeexporter and cadvisor if COLLECT_HOST_NETWORK is true
@@ -49,7 +49,7 @@ case "$1" in
 			sed -i 's/- \.\/caddy\//- \.\.\/caddy\//g' .tmp/docker-compose.yml
 			sed -i 's/- \.\/grafana\//- \.\.\/grafana\//g' .tmp/docker-compose.yml
 
-			if [ "$FIRST_ARGUMENT" = "up" ]; then
+			if [ "$1" = "up" ]; then
 				docker-compose -f $DOCKER_FILE $@
 				docker-compose -f ${DOCKER_FOLDER}docker-compose.exporters.yml $@
 			else
