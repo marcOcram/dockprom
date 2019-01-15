@@ -1208,7 +1208,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 10,
-          "legendFormat": "{{ domain }}: {{ source_bridge }}",
+          "legendFormat": "{{ domain }} - {{ source_bridge }}",
           "metric": "container_network_receive_bytes_total",
           "refId": "A",
           "step": 10
@@ -1304,7 +1304,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 10,
-          "legendFormat": "{{ domain }}:{{ source_bridge }}",
+          "legendFormat": "{{ domain }} - {{ source_bridge }}",
           "metric": "container_network_transmit_bytes_total",
           "refId": "A",
           "step": 10
