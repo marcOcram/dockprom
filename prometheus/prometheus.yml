@@ -18,28 +18,28 @@ scrape_configs:
     static_configs:
       - targets: ['nodeexporter:9100']
         labels:
-          hostname: TO_BE_DEFINED
+          hostname: ${hostname}
 
   - job_name: 'cadvisor'
     scrape_interval: 5s
     static_configs:
       - targets: ['cadvisor:8080']
         labels:
-          hostname: TO_BE_DEFINED
+          hostname: ${hostname}
 
   - job_name: 'libvirt'
     scrape_interval: 5s
     static_configs:
       - targets: ['libvirt:9177']
         labels:
-          hostname: TO_BE_DEFINED
+          hostname: ${hostname}
 
   - job_name: 'prometheus'
     scrape_interval: 10s
     static_configs:
       - targets: ['localhost:9090']
         labels:
-          hostname: TO_BE_DEFINED
+          hostname: ${hostname}
 
   - job_name: 'pushgateway'
     scrape_interval: 10s
@@ -47,25 +47,25 @@ scrape_configs:
     static_configs:
       - targets: ['pushgateway:9091']
         labels:
-          hostname: TO_BE_DEFINED
+          hostname: ${hostname}
 
-## This job is used to scrape from another prometheus instance
-#  - job_name: 'TO_BE_DEFINED'
-#    scrape_interval: 5s
-#    honor_labels: true
-#    metrics_path: '/federate'
-#    basic_auth:
-#      username: admin
-#      password: admin
-#    params:
-#      'match[]':
-#        # matches every job from the other prometheus instance
-#        - '{job=~".+"}'
-#    static_configs:
-#      - targets: ['192.168.162.50:9090']
-#        labels:
-#          # adds the label hostname if it is not set from remote prometheus
-#          hostname: TO_BE_DEFINED
+# This job is used to scrape from another prometheus instance
+  - job_name: 'federate-controller'
+    scrape_interval: 5s
+    honor_labels: true
+    metrics_path: '/federate'
+    basic_auth:
+      username: admin
+      password: admin
+    params:
+      'match[]':
+        # matches every job from the other prometheus instance
+        - '{job=~".+"}'
+    static_configs:
+      - targets: ['192.168.162.50:9090']
+        labels:
+          # adds the label hostname if it is not set from remote prometheus
+          hostname: controller
 
 alerting:
   alertmanagers:
