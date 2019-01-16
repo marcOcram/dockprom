@@ -1,0 +1,38 @@
+# accessible through http:
+# http://localhost:9093/#alerts?receiver=emailempfaenger
+global:
+  # ResolveTimeout is the time after which an alert is declared resolved
+  # if it has not been updated.
+  resolve_timeout: '2m'
+  # The default SMTP smarthost used for sending emails, including port number.
+  # For more information visit https://support.google.com/a/answer/176600?hl=de
+  smtp_smarthost: 'smtp.gmail.com:587'
+  # The default SMTP From header field.
+  smtp_from: 'cylab2018@gmail.com'
+  # The default hostname to identify to the SMTP server.
+  smtp_auth_username: 'cylab2018'
+  # SMTP Auth using LOGIN and PLAIN.
+  smtp_auth_password: 'kss2018cylab'
+  # The default SMTP TLS requirement.
+  smtp_require_tls: true
+
+  # A list of notification receivers. You can add more if needed.
+receivers:
+- name: 'emailempfaenger'
+  email_configs:
+  - to: 'cylab2018@gmail.com'
+
+  # The directory from which notification templates are read.
+templates: 
+- '/etc/alertmanager/template/email.tmpl'
+
+# Handle incomming alerts:
+route:
+  group_by: ['instance', 'warning']
+  # Time before sending initial alert. If other alerts occur during this time, it will be sent in the same batch!
+  group_wait: 30s 
+  # When the first notification was sent, wait 'group_interval' to send the next batch of active alerts.
+  group_interval: 30s
+  # If an alert has successfully been sent, wait 'repeat_interval' to resend them.
+  repeat_interval: 3m 
+  receiver: 'emailempfaenger' # receiving instance

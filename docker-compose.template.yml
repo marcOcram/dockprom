@@ -35,7 +35,9 @@ services:
     image: prom/alertmanager:v0.15.3
     container_name: alertmanager
     volumes:
-      - ./alertmanager/:/etc/alertmanager/
+    - ./alertmanager/alertmanager.yml:/etc/alertmanager/config.yml
+    - ./alertmanager/template/email.tmpl:/etc/alertmanager/template/email.tmpl
+    - ./alertmanager/template/email.html:/etc/alertmanager/template/email.html
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
@@ -103,6 +105,7 @@ services:
     container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./grafana/datasources:/etc/grafana/datasources
       - ./grafana/dashboards:/etc/grafana/dashboards
       - ./grafana/setup.sh:/setup.sh
