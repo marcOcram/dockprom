@@ -71,6 +71,7 @@ if [ $COLLECT_HOST_NETWORK ]; then
 			esac
 		;;
 		*)
+			docker-compose -f $DOCKER_FILE $@
 	esac
 else
 	docker-compose -f $DOCKER_FILE $@
