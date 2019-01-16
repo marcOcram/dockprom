@@ -1387,7 +1387,7 @@
           }
         ],
         "query": "label_values(hostname)",
-        "refresh": 0,
+        "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
