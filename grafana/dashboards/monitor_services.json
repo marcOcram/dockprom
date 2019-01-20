@@ -596,7 +596,7 @@
       "nullPointMode": "connected",
       "percentage": false,
       "pointradius": 5,
-      "points": true,
+      "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
