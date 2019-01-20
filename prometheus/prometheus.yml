@@ -58,22 +58,22 @@ scrape_configs:
 #        hostname: ${hostname}
 
 # This job is used to scrape from another prometheus instance
-  - job_name: 'federate-controller'
-    scrape_interval: 5s
-    honor_labels: true
-    metrics_path: '/federate'
-    basic_auth:
-      username: admin
-      password: admin
-    params:
-      'match[]':
-        # matches every job from the other prometheus instance
-        - '{job=~".+"}'
-    static_configs:
-      - targets: ['192.168.162.50:9090']
-        labels:
-          # adds the label hostname if it is not set from remote prometheus
-          hostname: controller
+#  - job_name: 'federate-<to-be-defined>'
+#    scrape_interval: 5s
+#    honor_labels: true
+#    metrics_path: '/federate'
+#    basic_auth:
+#      username: admin
+#      password: admin
+#    params:
+#      'match[]':
+#        # matches every job from the other prometheus instance
+#        - '{job=~".+"}'
+#    static_configs:
+#      - targets: ['<ip-address-to-be-defined>:9090']
+#        labels:
+#          # adds the label hostname if it is not set from remote prometheus
+#          hostname: <fallback-hostname-to-be-defined>
 
 alerting:
   alertmanagers:
