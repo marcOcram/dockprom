@@ -9,7 +9,7 @@ source ./configuration.cfg
 mkdir -p .tmp
 
 # create a copy of the template file
-cp docker-compose.template.yml .tmp/docker-compose.yml
+cp $DOCKER_TEMPLATE_FILE $DOCKER_FILE
 
 # replace mapping paths
 sed -i 's/- \.\/alertmanager\//- \.\.\/alertmanager\//g' .tmp/docker-compose.yml
@@ -33,7 +33,7 @@ if $COLLECT_HOST_NETWORK; then
 		exit 1
 	fi
 
-	cp docker-compose.exporters.template.yml .tmp/docker-compose.exporters.yml
+	cp $DOCKER_EXPORTERS_TEMPLATE_FILE $DOCKER_EXPORTERS_FILE
 
 	# configuring prometheus to scrape from external network
 	sed -i "s/nodeexporter:/$HOST_IP_ADDRESS:/g" .tmp/prometheus/prometheus.yml
