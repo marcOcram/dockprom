@@ -1,7 +1,9 @@
 dockprom
 ========
 
-A monitoring solution for Docker hosts and containers with [Prometheus](https://prometheus.io/), [Grafana](http://grafana.org/), [cAdvisor](https://github.com/google/cadvisor),
+This is a modified solution of [stefanprodan/dockprom](https://github.com/stefanprodan/dockprom) for a module of the [Hochschule Bremen - City University of Applied Sciences](https://www.hs-bremen.de/).
+
+A monitoring solution for Docker containers, virtual machines and their hosts with [Prometheus](https://prometheus.io/), [Grafana](http://grafana.org/), [cAdvisor](https://github.com/google/cadvisor), [libvirt_exporter](https://github.com/kumina/libvirt_exporter), 
 [NodeExporter](https://github.com/prometheus/node_exporter) and alerting with [AlertManager](https://github.com/prometheus/alertmanager).
 
 ***If you're looking for the Docker Swarm version please go to [stefanprodan/swarmprom](https://github.com/stefanprodan/swarmprom)***
@@ -11,10 +13,10 @@ A monitoring solution for Docker hosts and containers with [Prometheus](https://
 Clone this repository on your Docker host, cd into dockprom directory and run compose up:
 
 ```bash
-git clone https://github.com/stefanprodan/dockprom
+git clone https://github.com/marcOcram/dockprom
 cd dockprom
 
-ADMIN_USER=admin ADMIN_PASSWORD=admin docker-compose up -d
+./control.sh up -d
 ```
 
 Prerequisites:
@@ -30,11 +32,12 @@ Containers:
 * Grafana (visualize metrics) `http://<host-ip>:3000`
 * NodeExporter (host metrics collector)
 * cAdvisor (containers metrics collector)
+* libvirt_exporter (virtual machines metrics collector)
 * Caddy (reverse proxy and basic auth provider for prometheus and alertmanager)
 
 ## Setup Grafana
 
-Navigate to `http://<host-ip>:3000` and login with user ***admin*** password ***admin***. You can change the credentials in the compose file or by supplying the `ADMIN_USER` and `ADMIN_PASSWORD` environment variables on compose up. The config file can be added directly in grafana part like this
+Navigate to `http://<host-ip>:3000` and login with user ***admin*** password ***admin***. You can change the credentials by editing `control.sh`. The config file can be added directly in grafana part like this
 ```
 grafana:
   image: grafana/grafana:5.2.4
@@ -62,7 +65,7 @@ Grafana is preconfigured with dashboards and Prometheus as the default data sour
 
 ***Docker Host Dashboard***
 
-![Host](https://raw.githubusercontent.com/stefanprodan/dockprom/master/screens/Grafana_Docker_Host.png)
+![Host](https://raw.githubusercontent.com/marcOcram/dockprom/master/screens/Grafana_Docker_Host.png)
 
 The Docker Host Dashboard shows key metrics for monitoring the resource usage of your server:
 
@@ -87,7 +90,7 @@ You can find right value for your system in Prometheus `http://<host-ip>:9090` l
 
 ***Docker Containers Dashboard***
 
-![Containers](https://raw.githubusercontent.com/stefanprodan/dockprom/master/screens/Grafana_Docker_Containers.png)
+![Containers](https://raw.githubusercontent.com/marcOcram/dockprom/master/screens/Grafana_Docker_Containers.png)
 
 The Docker Containers Dashboard shows key metrics for monitoring running containers:
 
@@ -103,7 +106,7 @@ Note that this dashboard doesn't show the containers that are part of the monito
 
 ***Monitor Services Dashboard***
 
-![Monitor Services](https://raw.githubusercontent.com/stefanprodan/dockprom/master/screens/Grafana_Prometheus.png)
+![Monitor Services](https://raw.githubusercontent.com/marcOcram/dockprom/master/screens/Grafana_Prometheus.png)
 
 The Monitor Services Dashboard shows key metrics for monitoring the containers that make up the monitoring stack:
 
@@ -269,84 +272,3 @@ To push data, simply execute:
     echo "some_metric 3.14" | curl --data-binary @- http://user:password@localhost:9091/metrics/job/some_job
 
 Please replace the `user:password` part with your user and password set in the initial configuration (default: `admin:admin`).
-
-## Updating Grafana to v5.2.2
-
-[In Grafana versions >= 5.1 the id of the grafana user has been changed](http://docs.grafana.org/installation/docker/#migration-from-a-previous-version-of-the-docker-container-to-5-1-or-later). Unfortunately this means that files created prior to 5.1 won’t have the correct permissions for later versions.
-
-| Version |   User  | User ID |
-|:-------:|:-------:|:-------:|
-|  < 5.1  | grafana |   104   |
-|  \>= 5.1 | grafana |   472   |
-
-There are two possible solutions to this problem.
-- Change ownership from 104 to 472
-- Start the upgraded container as user 104
-
-##### Specifying a user in docker-compose.yml
-
-To change ownership of the files run your grafana container as root and modify the permissions.
-
-First perform a `docker-compose down` then modify your docker-compose.yml to include the `user: root` option:
-
-```
-  grafana:
-    image: grafana/grafana:5.2.2
-    container_name: grafana
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./grafana/datasources:/etc/grafana/datasources
-      - ./grafana/dashboards:/etc/grafana/dashboards
-      - ./grafana/setup.sh:/setup.sh
-    entrypoint: /setup.sh
-    user: root
-    environment:
-      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
-      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-      - GF_USERS_ALLOW_SIGN_UP=false
-    restart: unless-stopped
-    expose:
-      - 3000
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-```
-
-Perform a `docker-compose up -d` and then issue the following commands:
-
-```
-docker exec -it --user root grafana bash
-
-# in the container you just started:
-chown -R root:root /etc/grafana && \
-chmod -R a+r /etc/grafana && \
-chown -R grafana:grafana /var/lib/grafana && \
-chown -R grafana:grafana /usr/share/grafana
-```
-
-To run the grafana container as `user: 104` change your `docker-compose.yml` like such:
-
-```
-  grafana:
-    image: grafana/grafana:5.2.2
-    container_name: grafana
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./grafana/datasources:/etc/grafana/datasources
-      - ./grafana/dashboards:/etc/grafana/dashboards
-      - ./grafana/setup.sh:/setup.sh
-    entrypoint: /setup.sh
-    user: "104"
-    environment:
-      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
-      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-      - GF_USERS_ALLOW_SIGN_UP=false
-    restart: unless-stopped
-    expose:
-      - 3000
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-```
