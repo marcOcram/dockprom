@@ -938,7 +938,7 @@
           "expr": "sum by (domain) (rate(libvirt_domain_info_cpu_time_seconds_total{domain!=\"\", hostname=\"$hostname\"}[1m])) / scalar(count(node_cpu_seconds_total{mode=\"user\", hostname=\"$hostname\"})) * 100",
           "format": "time_series",
           "interval": "",
-          "intervalFactor": 10,
+          "intervalFactor": 1,
           "legendFormat": "{{ domain }}",
           "metric": "container_cpu_user_seconds_total",
           "refId": "A",

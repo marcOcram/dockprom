@@ -898,7 +898,7 @@
         {
           "expr": "sum(rate(node_cpu_seconds_total{hostname=\"$hostname\"}[1m])) by (mode) * 100 / scalar(count(node_cpu_seconds_total{mode=\"user\",hostname=\"$hostname\"}))",
           "format": "time_series",
-          "intervalFactor": 10,
+          "intervalFactor": 1,
           "legendFormat": "{{ mode }}",
           "metric": "node_cpu_seconds_total",
           "refId": "A",

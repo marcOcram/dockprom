@@ -419,7 +419,7 @@
         {
           "expr": "sum by (name) (rate(container_cpu_user_seconds_total{container_label_org_label_schema_group=\"monitoring\",hostname=\"$hostname\"}[1m]) * 100  / scalar(count(node_cpu_seconds_total{mode=\"user\",hostname=\"$hostname\"})))",
           "format": "time_series",
-          "intervalFactor": 10,
+          "intervalFactor": 1,
           "legendFormat": "{{ name }}",
           "refId": "B"
         }
