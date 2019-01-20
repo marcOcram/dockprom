@@ -35,9 +35,9 @@ services:
     image: prom/alertmanager:v0.15.3
     container_name: alertmanager
     volumes:
-    - ./alertmanager/alertmanager.yml:/etc/alertmanager/config.yml
-    - ./alertmanager/template/email.tmpl:/etc/alertmanager/template/email.tmpl
-    - ./alertmanager/template/email.html:/etc/alertmanager/template/email.html
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/config.yml
+      - ./alertmanager/template/email.tmpl:/etc/alertmanager/template/email.tmpl
+      - ./alertmanager/template/email.html:/etc/alertmanager/template/email.html
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
