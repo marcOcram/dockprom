@@ -39,7 +39,8 @@ cp -rf ./prometheus/* .tmp/prometheus/
 HOSTNAME=$(hostname)
 
 # replace variables (only ${hostname} supported at the moment)
-sed -i "s/\${hostname}/$HOSTNAME/g" .tmp/prometheus/prometheus.yml 
+sed -i "s/\${hostname}/$HOSTNAME/g" .tmp/prometheus/prometheus.yml
+sed -i "s/\${hostname}/$HOSTNAME/g" .tmp/prometheus/alert.rules
 
 if [ $COLLECT_HOST_NETWORK ]; then
 	if [ "$HOST_IP_ADDRESS" = "" ] ; then
