@@ -49,12 +49,13 @@ scrape_configs:
         labels:
           hostname: ${hostname}
 
-  - job_name: 'alertmanager'
-    scrape_interval: 5s
-    static_configs:
-    - targets: ['alertmanager:9093']
-      labels:
-        hostname: ${hostname}
+# it's not useful to scrape from the alertmanager
+#  - job_name: 'alertmanager'
+#    scrape_interval: 5s
+#    static_configs:
+#    - targets: ['alertmanager:9093']
+#      labels:
+#        hostname: ${hostname}
 
 # This job is used to scrape from another prometheus instance
   - job_name: 'federate-controller'
