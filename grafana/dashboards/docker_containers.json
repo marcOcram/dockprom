@@ -628,6 +628,7 @@
       },
       "yaxes": [
         {
+          "decimals": 0,
           "format": "none",
           "label": "",
           "logBase": 1,
