@@ -598,7 +598,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "scalar(count(container_memory_usage_bytes{image!=\"\",hostname=\"$hostname\"}) > 0)",
+          "expr": "scalar(count(container_memory_usage_bytes{image!=\"\",hostname=\"$hostname\",container_label_org_label_schema_group!=\"monitoring\"}) > 0)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -611,7 +611,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Running Containers",
+      "title": "Running Containers (excl. Monitoring Containers)",
       "tooltip": {
         "msResolution": true,
         "shared": true,
