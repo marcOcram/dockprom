@@ -1,5 +1,5 @@
 route:
   receiver: 'default-empty'
 
-receiver:
+receivers:
   - name: 'default-empty'
