@@ -130,6 +130,7 @@ I've setup three alert groups within the [alert.rules](https://github.com/stefan
 You can modify the alert rules and reload them by making a HTTP POST call to Prometheus:
 
 ```
+cd .tmp/
 curl -X POST http://admin:admin@<host-ip>:9090/-/reload
 ```
 
