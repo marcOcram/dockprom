@@ -28,6 +28,11 @@ sed -i "s/\${hostname}/$HOSTNAME/g" .tmp/prometheus/prometheus.yml
 sed -i "s/\${hostname}/$HOSTNAME/g" .tmp/prometheus/alert.rules
 
 if $COLLECT_HOST_NETWORK; then
+	if [ "$HOST_NETWORK_INTERFACE" != "" ] ; then
+		HOST_IP_ADDRESS=$(ip -f inet -o addr show $HOST_NETWORK_INTERFACE | cut -d \  -f 7 | cut -d / -f 1)
+		echo "IP address of host: $HOST_IP_ADDRESS"		
+	fi
+
 	if [ "$HOST_IP_ADDRESS" = "" ] ; then
 		echo "IP address of host not configured"
 		exit 1
